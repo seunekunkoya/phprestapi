@@ -9,35 +9,36 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 // include database and object files
 include_once '../config/database.php';
 include_once '../objects/product.php';
-
-//get databse connection
-$databse = new Database();
-$db = $databse->getConnection();
-
-//prepare product object
-$product = new Product();
-
-//get id of product to be edited
+ 
+// get database connection
+$database = new Database();
+$db = $database->getConnection();
+ 
+// prepare product object
+$product = new Product($db);
+ 
+// get id of product to be edited
 $data = json_decode(file_get_contents("php://input"));
-
-//set ID property to be edited
+ 
+// set ID property of product to be edited
 $product->id = $data->id;
-
-//set product property values
+ 
+// set product property values
 $product->name = $data->name;
 $product->price = $data->price;
 $product->description = $data->description;
 $product->category_id = $data->category_id;
-
-//update product
+ 
+// update the product
 if($product->update()){
-	
-	//set response code
-	http_response_code(200);
-
-	//tell the user
-	echo json_encode(array("message" => "Product was updated."));
+ 
+    // set response code - 200 ok
+    http_response_code(200);
+ 
+    // tell the user
+    echo json_encode(array("message" => "Product was updated."));
 }
+ 
 // if unable to update the product, tell the user
 else{
  
@@ -46,7 +47,5 @@ else{
  
     // tell the user
     echo json_encode(array("message" => "Unable to update product."));
-}
-	
 }
 ?>
